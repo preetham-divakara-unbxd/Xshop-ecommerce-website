@@ -1,0 +1,99 @@
+### API Testing File
+### You can use this with REST Client extension in VS Code
+### Or use these commands with curl in terminal
+
+@baseUrl = http://localhost:3000/api
+@sessionId = test-session-123
+
+### Health Check
+GET http://localhost:3000/health
+
+### Get All Products
+GET {{baseUrl}}/products
+
+### Get Product by ID (replace with actual ID from database)
+GET {{baseUrl}}/products/REPLACE_WITH_PRODUCT_ID
+
+### Search Products
+GET {{baseUrl}}/products/search?q=iphone
+
+### Get Products by Category
+GET {{baseUrl}}/products/category/Mobile%20phone
+
+### Get All Categories
+GET {{baseUrl}}/categories
+
+### Get Cart
+GET {{baseUrl}}/cart
+x-session-id: {{sessionId}}
+
+### Add to Cart (replace productId with actual ID)
+POST {{baseUrl}}/cart
+Content-Type: application/json
+x-session-id: {{sessionId}}
+
+{
+  "productId": "REPLACE_WITH_PRODUCT_ID",
+  "quantity": 2
+}
+
+### Update Cart Item
+PUT {{baseUrl}}/cart/REPLACE_WITH_PRODUCT_ID
+Content-Type: application/json
+x-session-id: {{sessionId}}
+
+{
+  "quantity": 3
+}
+
+### Remove from Cart
+DELETE {{baseUrl}}/cart/REPLACE_WITH_PRODUCT_ID
+x-session-id: {{sessionId}}
+
+### Get Wishlist
+GET {{baseUrl}}/wishlist
+x-session-id: {{sessionId}}
+
+### Add to Wishlist
+POST {{baseUrl}}/wishlist
+Content-Type: application/json
+x-session-id: {{sessionId}}
+
+{
+  "productId": "REPLACE_WITH_PRODUCT_ID"
+}
+
+### Remove from Wishlist
+DELETE {{baseUrl}}/wishlist/REPLACE_WITH_PRODUCT_ID
+x-session-id: {{sessionId}}
+
+### Create Order
+POST {{baseUrl}}/orders
+Content-Type: application/json
+
+{
+  "customer": {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "phone": "1234567890",
+    "address": "123 Main St",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "pincode": "400001"
+  },
+  "payment": {
+    "method": "card"
+  },
+  "items": [
+    {
+      "productId": "REPLACE_WITH_PRODUCT_ID",
+      "quantity": 1
+    }
+  ]
+}
+
+### Get All Orders
+GET {{baseUrl}}/orders
+
+### Get Order by ID
+GET {{baseUrl}}/orders/REPLACE_WITH_ORDER_ID

@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "name": "Headphone",
+    "icon": "🎧",
+    "image": "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300&h=300&fit=crop"
+  },
+  {
+    "id": 2,
+    "name": "Smart Watch",
+    "icon": "⌚",
+    "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop"
+  },
+  {
+    "id": 3,
+    "name": "Camera",
+    "icon": "📷",
+    "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300&h=300&fit=crop"
+  },
+  {
+    "id": 4,
+    "name": "Gamepad",
+    "icon": "🎮",
+    "image": "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=300&h=300&fit=crop"
+  },
+  {
+    "id": 5,
+    "name": "Laptop",
+    "icon": "💻",
+    "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=300&h=300&fit=crop"
+  },
+  {
+    "id": 6,
+    "name": "Mobile phone",
+    "icon": "📱",
+    "image": "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=300&h=300&fit=crop"
+  },
+  {
+    "id": 7,
+    "name": "Television",
+    "icon": "📺",
+    "image": "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=300&h=300&fit=crop"
+  }
+]

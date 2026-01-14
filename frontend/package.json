@@ -1,0 +1,18 @@
+{
+  "name": "xshop-frontend",
+  "version": "1.0.0",
+  "description": "XSHOP E-commerce Frontend",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "serve": "python3 -m http.server 8000"
+    
+  },
+  "keywords": ["ecommerce", "frontend"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Results - XSHOP</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <div id="header-container"></div>
+
+  <main>
+    <section class="products-section" style="margin-top: 40px;">
+      <div class="container">
+        <h2 class="section-title">Search Results for "<span id="search-query"></span>"</h2>
+        <p id="results-count" style="margin-bottom: 24px; color: var(--text-light);"></p>
+        <div id="results-container" class="products-grid">
+          <!-- Results will be loaded dynamically -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer-container"></div>
+
+  <script type="module" src="js/pages/search.js"></script>
+</body>
+</html>

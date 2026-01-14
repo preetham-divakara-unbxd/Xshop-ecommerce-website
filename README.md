@@ -200,4 +200,5 @@ For detailed API documentation, see `backend/README.md`
 ## 📄 License
 
 ISC
-preetham
+
+Thank you

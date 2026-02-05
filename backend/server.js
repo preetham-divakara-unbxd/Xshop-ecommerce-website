@@ -28,7 +28,6 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/xshop'
 // ==================== Middleware ====================
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // Request logging middleware
 app.use((req, res, next) => {
@@ -36,23 +35,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// ==================== Error Handler Middleware ====================
-const notFound = (req, res, next) => {
-  res.status(404).json({
-    success: false,
-    message: `Route ${req.originalUrl} not found`
-  });
-};
 
-const errorHandler = (err, req, res, next) => {
-  console.error('Error:', err);
-  
-  res.status(err.status || 500).json({
-    success: false,
-    message: err.message || 'Internal server error',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
-  });
-};
 
 // ==================== Database Connection ====================
 const connectDatabase = async () => {
@@ -172,7 +155,7 @@ app.get('/api/products', async (req, res) => {
     // Get products by category
     if (category) {
       // Edge case: Empty category string
-      const decodedCategory = decodeURIComponent(category).trim();
+      const decodedCategory = category.trim();
       
       if (!decodedCategory) {
         return res.status(400).json({
@@ -235,37 +218,28 @@ app.get('/api/categories', async (req, res) => {
 });
 
 // ==================== Search API ====================
-// GET /api/search?q=query - Search products
+// GET /api/search?q=query - Search products with typo tolerance and suggestions
 app.get('/api/search', async (req, res) => {
   try {
     const searchTerm = req.query.q;
     
     // Edge case: Missing search query
-    if (!searchTerm) {
-      return res.status(400).json({
-        success: false,
-        message: 'Search query is required. Use ?q=your_search_term'
-      });
-    }
     
     // Edge case: Empty or whitespace-only search query
-    const trimmedSearchTerm = searchTerm.trim();
+    const trimmedSearchTerm = (searchTerm || '').trim();
     if (!trimmedSearchTerm) {
       return res.status(400).json({
         success: false,
-        message: 'Search query cannot be empty'
+        message: 'Search query is required and cannot be empty'
       });
     }
     
-    // Edge case: Search query too short (optional - can remove if not needed)
-    /*if (trimmedSearchTerm.length < 2) {
-      return res.status(400).json({
-        success: false,
-        message: 'Search query must be at least 2 characters long'
-      });
-    }*/
+    // Split search term into words for better matching
+    const words = trimmedSearchTerm.split(/\s+/).filter(word => word.length > 0);
+    const mainKeyword = words[0]; // First word (e.g., "iphone" from "iphone 15")
     
-    const products = await Product.find({
+    // Step 1: Try exact match first
+    let products = await Product.find({
       $or: [
         { name: { $regex: trimmedSearchTerm, $options: 'i' } },
         { brand: { $regex: trimmedSearchTerm, $options: 'i' } },
@@ -274,10 +248,53 @@ app.get('/api/search', async (req, res) => {
       ]
     });
     
+    let searchType = 'exact';
+    
+    // Step 2: If no exact match, try word-based matching (handles typos like "iphon 14")
+    if (products.length === 0 && words.length > 0) {
+      // Match all words (AND condition) - each word must appear somewhere
+      // This handles cases like "iphon 14" where "iphon" matches "iphone"
+      const wordQueries = words.map(word => ({
+        $or: [
+          { name: { $regex: word, $options: 'i' } },
+          { brand: { $regex: word, $options: 'i' } },
+          { category: { $regex: word, $options: 'i' } },
+          { description: { $regex: word, $options: 'i' } }
+        ]
+      }));
+      
+      products = await Product.find({
+        $and: wordQueries
+      });
+      
+      if (products.length > 0) {
+        searchType = 'fuzzy';
+      }
+    }
+    
+    // Step 3: If still no results and multiple words, try broader search (just main keyword)
+    // This handles cases like "iphone 15" when only "iphone 14" exists
+    if (products.length === 0 && words.length > 1 && mainKeyword.length > 2) {
+      products = await Product.find({
+        $or: [
+          { name: { $regex: mainKeyword, $options: 'i' } },
+          { brand: { $regex: mainKeyword, $options: 'i' } },
+          { category: { $regex: mainKeyword, $options: 'i' } },
+          { description: { $regex: mainKeyword, $options: 'i' } }
+        ]
+      }).limit(10); // Limit suggestions to 10 products
+      
+      if (products.length > 0) {
+        searchType = 'suggestion';
+      }
+    }
+    
     res.json({
       success: true,
       count: products.length,
-      data: products
+      data: products,
+      searchType: searchType,
+      originalQuery: trimmedSearchTerm
     });
   } catch (error) {
     res.status(500).json({
@@ -288,8 +305,7 @@ app.get('/api/search', async (req, res) => {
 });
 
 // Error handling middleware (must be last)
-app.use(notFound);
-app.use(errorHandler);
+
 
 // ==================== Start Server ====================
 const startServer = async () => {

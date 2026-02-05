@@ -1,0 +1,439 @@
+export const paginationTemplate1 = function (paginationData, pagination) {
+    if (!paginationData) return '';
+
+    const { currentPage, isNext, isPrev, noOfPages, numberOfProducts, productsLn, rows } = paginationData;
+    const { pageClass, selectedPageClass, pageLimit } = pagination;
+
+    if (numberOfProducts <= productsLn) return '';
+
+    // First button
+    let firstBtn = isPrev
+      ? `<button class="${pageClass}" data-page-action="firstPage">« First</button>`
+      : `<button class="${pageClass}" disabled>« First</button>`;
+
+    // Previous button (changed to "Back")
+    let prevBtn = isPrev
+      ? `<button class="${pageClass}" data-page-action="prev">‹ Back</button>`
+      : `<button class="${pageClass}" disabled>‹ Back</button>`;
+
+    // Next button
+    let nextBtn = isNext
+      ? `<button class="${pageClass}" data-page-action="next">Next ›</button>`
+      : `<button class="${pageClass}" disabled>Next ›</button>`;
+
+    // Last button
+    let lastBtn = isNext
+      ? `<button class="${pageClass}" data-page-action="lastPage">Last »</button>`
+      : `<button class="${pageClass}" disabled>Last»</button>`;
+
+    // Page numbers
+    let pageNumbers = '';
+    let pages = Math.min(noOfPages, pageLimit);
+    let startPoint = Math.max(1, currentPage - Math.floor(pageLimit / 2));
+
+    if (startPoint + pages - 1 > noOfPages) {
+      startPoint = Math.max(1, noOfPages - pages + 1);
+    }
+
+    for (let i = startPoint; i < startPoint + pages && i <= noOfPages; i++) {
+      const isActive = i === currentPage ? selectedPageClass : '';
+      pageNumbers += `<button data-page-action="paginate" data-page-no="${(i - 1) * rows}" class="${pageClass} ${isActive}">${i}</button>`;
+    }
+
+    // Ellipsis and last page
+    let ellipsis = '';
+    if (startPoint + pages - 1 < noOfPages - 1) {
+      ellipsis = `<span class="page-ellipsis">...</span>`;
+      ellipsis += `<button data-page-action="paginate" data-page-no="${(noOfPages - 1) * rows}" class="${pageClass}">${noOfPages}</button>`;
+    }
+
+    return `
+      <div class="custom-pagination">
+        ${firstBtn}
+        ${prevBtn}
+        <div class="page-numbers">
+          ${pageNumbers}
+          ${ellipsis}
+        </div>
+        ${nextBtn}
+        ${lastBtn}
+      </div>
+      `;
+  }
+
+  export const paginationTemplate2 =function (paginationData, pagination) {
+    if (!paginationData) return '';
+
+    const { currentPage, isNext, isPrev, noOfPages, numberOfProducts, productsLn, rows } = paginationData;
+    const { pageClass, selectedPageClass, pageLimit } = pagination;
+
+    if (numberOfProducts <= productsLn) return '';
+
+    // Previous button
+    let prevBtn = isPrev
+      ? `<button class="${pageClass} nav-btn" data-page-action="prev">‹ PREV</button>`
+      : `<button class="${pageClass} nav-btn" disabled>‹ PREV</button>`;
+
+    // Next button
+    let nextBtn = isNext
+      ? `<button class="${pageClass} nav-btn" data-page-action="next">NEXT ›</button>`
+      : `<button class="${pageClass} nav-btn" disabled>NEXT ›</button>`;
+
+    // Page numbers
+    let pageNumbers = '';
+    let pages = Math.min(noOfPages, pageLimit);
+    let startPoint = Math.max(1, currentPage - Math.floor(pageLimit / 2));
+
+    if (startPoint + pages - 1 > noOfPages) {
+      startPoint = Math.max(1, noOfPages - pages + 1);
+    }
+
+    for (let i = startPoint; i < startPoint + pages && i <= noOfPages; i++) {
+      const isActive = i === currentPage ? selectedPageClass : '';
+      pageNumbers += `<button data-page-action="paginate" data-page-no="${(i - 1) * rows}" class="${pageClass} ${isActive}">${i}</button>`;
+    }
+
+   
+
+    return `
+      <div class="custom-pagination style-2">
+        ${prevBtn}
+        <div class="page-numbers">
+          ${pageNumbers}
+          
+        </div>
+        ${nextBtn}
+      </div>
+      `;
+  }
+
+// paginationTemplate3 ================
+
+//   pagination: {
+//     enabled: true,
+//     type: "FIXED_PAGINATION",
+//     el: document.getElementById("pagination-container"),
+//     pageClass: "page-btn",
+//     selectedPageClass: "page-btn-active",
+//     pageLimit: 7,
+//     action: "click",
+  
+//     template: function(paginationData, pagination) {
+//       if (!paginationData) return '';
+  
+//       const { currentPage, isNext, isPrev, noOfPages, numberOfProducts, productsLn, rows } = paginationData;
+//       const { pageClass, selectedPageClass, pageLimit } = pagination;
+  
+//       if (numberOfProducts <= productsLn) return '';
+  
+//       // Previous button (left end)
+//       let prevBtn = isPrev
+//         ? `<button class="${pageClass} nav-btn prev-btn" data-page-action="prev">← Previous</button>`
+//         : `<button class="${pageClass} nav-btn prev-btn" disabled>← Previous</button>`;
+  
+//       // Next button (right end)
+//       let nextBtn = isNext
+//         ? `<button class="${pageClass} nav-btn next-btn" data-page-action="next">Next →</button>`
+//         : `<button class="${pageClass} nav-btn next-btn" disabled>Next →</button>`;
+  
+//       // Page numbers
+//       let pageNumbers = '';
+//       let pages = Math.min(noOfPages, pageLimit);
+//       let startPoint = Math.max(1, currentPage - Math.floor(pageLimit / 2));
+  
+//       if (startPoint + pages - 1 > noOfPages) {
+//         startPoint = Math.max(1, noOfPages - pages + 1);
+//       }
+  
+//       for (let i = startPoint; i < startPoint + pages && i <= noOfPages; i++) {
+//         const isActive = i === currentPage ? selectedPageClass : '';
+//         pageNumbers += `<button data-page-action="paginate" data-page-no="${(i - 1) * rows}" class="${pageClass} ${isActive}">${i}</button>`;
+//       }
+  
+//       // Page info
+//       let pageInfo = `<span class="page-info">Page ${currentPage} of ${noOfPages}</span>`;
+  
+//       return `
+//         <div class="custom-pagination style-3">
+//           ${prevBtn}
+//           <div class="pagination-center">
+//             <div class="page-numbers">${pageNumbers}</div>
+//             ${pageInfo}
+//           </div>
+//           ${nextBtn}
+//         </div>
+//       `;
+//     }
+//   },
+
+// style 4
+
+// pagination: {
+//   enabled: true,
+//   type: "FIXED_PAGINATION",
+//   el: document.getElementById("pagination-container"),
+//   pageClass: "page-btn",
+//   selectedPageClass: "page-btn-active",
+//   pageLimit: 5,
+//   action: "click",
+
+//   template: function (paginationData, pagination) {
+//     if (!paginationData) return '';
+
+//     const { currentPage, isNext, isPrev, noOfPages, numberOfProducts, productsLn, rows } = paginationData;
+//     const { pageClass, selectedPageClass, pageLimit } = pagination;
+
+//     if (numberOfProducts <= productsLn) return '';
+
+//     // Previous button
+//     let prevBtn = isPrev
+//       ? `<button class="${pageClass} nav-btn" data-page-action="prev">‹</button>`
+//       : `<button class="${pageClass} nav-btn" disabled>‹</button>`;
+
+//     // Next button
+//     let nextBtn = isNext
+//       ? `<button class="${pageClass} nav-btn" data-page-action="next">›</button>`
+//       : `<button class="${pageClass} nav-btn" disabled>›</button>`;
+
+//     // Page numbers
+//     let pageNumbers = '';
+//     let pages = Math.min(noOfPages, pageLimit);
+//     let startPoint = Math.max(1, currentPage - Math.floor(pageLimit / 2));
+
+//     if (startPoint + pages - 1 > noOfPages) {
+//       startPoint = Math.max(1, noOfPages - pages + 1);
+//     }
+
+//     for (let i = startPoint; i < startPoint + pages && i <= noOfPages; i++) {
+//       const isActive = i === currentPage ? selectedPageClass : '';
+//       pageNumbers += `<button data-page-action="paginate" data-page-no="${(i - 1) * rows}" class="${pageClass} ${isActive}">${i}</button>`;
+//     }
+
+//     // Ellipsis and last page
+//     let ellipsis = '';
+//     if (startPoint + pages - 1 < noOfPages - 1) {
+//       ellipsis = `<span class="page-ellipsis">...</span>`;
+//       ellipsis += `<button data-page-action="paginate" data-page-no="${(noOfPages - 1) * rows}" class="${pageClass}">${noOfPages}</button>`;
+//     }
+//     return `
+//       <div class="custom-pagination style-4">
+//         ${prevBtn}
+//         <div class="page-numbers">
+//           ${pageNumbers}
+//           ${ellipsis}
+//         </div>
+//         ${nextBtn}
+//       </div>
+//     `;
+//   }
+// },
+
+use cases 
+1)
+ pagination: {
+          enabled: true,
+          type: "FIXED_PAGINATION",
+          el: document.getElementById("pagination-container"),
+          pageClass: "page-btn",
+          selectedPageClass: "page-btn-active",
+          pageLimit: 5,
+          action: "click",
+        
+          template: function (paginationData, pagination) {
+            if (!paginationData) return '';
+        
+            const { currentPage, noOfPages, numberOfProducts, productsLn, rows } = paginationData;
+            const { pageClass, selectedPageClass, pageLimit } = pagination;
+        
+            if (numberOfProducts <= productsLn) return '';
+        
+            // Page numbers
+            let pageNumbers = '';
+            let pages = Math.min(noOfPages, pageLimit);
+            let startPoint = Math.max(1, currentPage - Math.floor(pageLimit / 2));
+        
+            if (startPoint + pages - 1 > noOfPages) {
+              startPoint = Math.max(1, noOfPages - pages + 1);
+            }
+        
+            for (let i = startPoint; i < startPoint + pages && i <= noOfPages; i++) {
+              const isActive = i === currentPage ? selectedPageClass : '';
+              pageNumbers += `<button data-page-action="paginate" data-page-no="${(i - 1) * rows}" class="${pageClass} ${isActive}">${i}</button>`;
+            }
+        
+            // Ellipsis and last page
+            let ellipsis = '';
+            if (startPoint + pages - 1 < noOfPages - 1) {
+              ellipsis = `<span class="page-ellipsis">...</span>`;
+              ellipsis += `<button data-page-action="paginate" data-page-no="${(noOfPages - 1) * rows}" class="${pageClass}">${noOfPages}</button>`;
+            }
+        
+            return `
+              <div class="custom-pagination style-5">
+                <div class="page-numbers">
+                  ${pageNumbers}
+                  ${ellipsis}
+                </div>
+              </div>
+            `;
+          }
+        },
+
+    2)
+    pagination: {
+          enabled: true,
+          type: "FIXED_PAGINATION",
+          el: document.getElementById("pagination-container"),
+          pageClass: "page-btn",
+          selectedPageClass: "page-btn-active",
+          pageLimit: 7,
+          action: "click",
+        
+          template: function (paginationData, pagination) {
+            if (!paginationData) return '';
+        
+            const { currentPage, isNext, isPrev, noOfPages, numberOfProducts, productsLn } = paginationData;
+            const { pageClass } = pagination;
+        
+            if (numberOfProducts <= productsLn) return '';
+        
+            // Previous button (left end)
+            let prevBtn = isPrev
+              ? `<button class="${pageClass} nav-btn prev-btn" data-page-action="prev">← Previous</button>`
+              : `<button class="${pageClass} nav-btn prev-btn" disabled>← Previous</button>`;
+        
+            // Next button (right end)
+            let nextBtn = isNext
+              ? `<button class="${pageClass} nav-btn next-btn" data-page-action="next">Next →</button>`
+              : `<button class="${pageClass} nav-btn next-btn" disabled>Next →</button>`;
+        
+            // Page info only (no buttons)
+            let pageInfo = `<span class="page-info">Page ${currentPage} of ${noOfPages}</span>`;
+        
+            return `
+              <div class="custom-pagination style-3">
+                ${prevBtn}
+                <div class="pagination-center">
+                  ${pageInfo}
+                </div>
+                ${nextBtn}
+              </div>
+            `;
+          }
+        },
+3)
+pagination: {
+          enabled: true,
+          type: "FIXED_PAGINATION",
+          el: document.getElementById("pagination-container"),
+          pageClass: "page-btn",
+          selectedPageClass: "page-btn-active",
+          pageLimit: 7,
+          action: "click",
+        
+          template: function (paginationData, pagination) {
+            if (!paginationData) return '';
+        
+            const { currentPage, isNext, isPrev, noOfPages, numberOfProducts, productsLn, rows } = paginationData;
+            const { pageClass, selectedPageClass, pageLimit } = pagination;
+        
+            if (numberOfProducts <= productsLn) return '';
+        
+            // First button
+            let firstBtn = isPrev
+              ? `<button class="${pageClass}" data-page-action="firstPage">« First</button>`
+              : `<button class="${pageClass}" disabled>« First</button>`;
+        
+            // Previous button (changed to "Back")
+            let prevBtn = isPrev
+              ? `<button class="${pageClass}" data-page-action="prev">‹ Back</button>`
+              : `<button class="${pageClass}" disabled>‹ Back</button>`;
+        
+            // Next button
+            let nextBtn = isNext
+              ? `<button class="${pageClass}" data-page-action="next">Next ›</button>`
+              : `<button class="${pageClass}" disabled>Next ›</button>`;
+        
+            // Last button
+            let lastBtn = isNext
+              ? `<button class="${pageClass}" data-page-action="lastPage">Last »</button>`
+              : `<button class="${pageClass}" disabled>Last»</button>`;
+        
+            // Page numbers
+            let pageNumbers = '';
+            let pages = Math.min(noOfPages, pageLimit);
+            let startPoint = Math.max(1, currentPage - Math.floor(pageLimit / 2));
+        
+            if (startPoint + pages - 1 > noOfPages) {
+              startPoint = Math.max(1, noOfPages - pages + 1);
+            }
+        
+            for (let i = startPoint; i < startPoint + pages && i <= noOfPages; i++) {
+              const isActive = i === currentPage ? selectedPageClass : '';
+              pageNumbers += `<button data-page-action="paginate" data-page-no="${(i - 1) * rows}" class="${pageClass} ${isActive}">${i}</button>`;
+            }
+        
+            // Ellipsis and last page
+            let ellipsis = '';
+            if (startPoint + pages - 1 < noOfPages - 1) {
+              ellipsis = `<span class="page-ellipsis">...</span>`;
+              ellipsis += `<button data-page-action="paginate" data-page-no="${(noOfPages - 1) * rows}" class="${pageClass}">${noOfPages}</button>`;
+            }
+        
+            return `
+              <div class="custom-pagination">
+                ${firstBtn}
+                ${prevBtn}
+                <div class="page-numbers">
+                  ${pageNumbers}
+                  ${ellipsis}
+                </div>
+                ${nextBtn}
+                ${lastBtn}
+              </div>
+              `;
+          }
+        },
+
+        4)
+
+
+5)
+pagination: {
+          enabled: true,
+          type: "FIXED_PAGINATION",
+          el: document.getElementById("pagination-container"),
+          pageClass: "page-btn",
+          selectedPageClass: "page-btn-active",
+          action: "click",
+        
+          template: function (paginationData, pagination) {
+            if (!paginationData) return '';
+        
+            const { currentPage, noOfPages, numberOfProducts, productsLn, rows, start } = paginationData;
+            const { pageClass, selectedPageClass } = pagination;
+        
+            if (numberOfProducts <= productsLn) return '';
+        
+            // Product count text
+            const startNum = start + 1;
+            const endNum = Math.min(start + productsLn, numberOfProducts);
+            let productInfo = `<span class="product-info">Showing ${startNum} to ${endNum} of ${numberOfProducts} products</span>`;
+        
+            // ALL page numbers (no limit)
+            let pageNumbers = '';
+            for (let i = 1; i <= noOfPages; i++) {
+              const isActive = i === currentPage ? selectedPageClass : '';
+              pageNumbers += `<button data-page-action="paginate" data-page-no="${(i - 1) * rows}" class="${pageClass} ${isActive}">${i}</button>`;
+            }
+        
+            return `
+              <div class="custom-pagination style-6">
+                ${productInfo}
+                <div class="page-numbers">
+                  ${pageNumbers}
+                </div>
+              </div>
+            `;
+          }
+        },

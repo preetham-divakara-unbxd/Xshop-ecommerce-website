@@ -1,30 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { getCart, updateCartItem, removeFromCart } from '../utils/cartUtils';
+import React from 'react';
+import { useNavigate, Link } from 'react-router';
+import { useAppContext } from '../context/AppContext';
 import { formatPrice } from '../utils/helpers';
 import Button from '../components/Button';
-import { useCartCount } from '../hooks/useCartCount';
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { updateCartCount } = useCartCount();
-  const [cart, setCart] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    loadCart();
-  }, []);
-
-  const loadCart = () => {
-    try {
-      const cartData = getCart();
-      setCart(cartData);
-    } catch (error) {
-      console.error('Error loading cart:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { cart, updateCartItem, removeFromCart } = useAppContext();
 
   const updateQuantity = (productId, change, newValue = null) => {
     try {
@@ -38,9 +20,7 @@ const Cart = () => {
         newQuantity = Math.max(1, item.quantity + change);
       }
 
-      const updatedCart = updateCartItem(productId, newQuantity);
-      setCart(updatedCart);
-      updateCartCount();
+      updateCartItem(productId, newQuantity);
     } catch (error) {
       console.error('Error updating quantity:', error);
     }
@@ -48,9 +28,7 @@ const Cart = () => {
 
   const removeItem = (productId) => {
     try {
-      const updatedCart = removeFromCart(productId);
-      setCart(updatedCart);
-      updateCartCount();
+      removeFromCart(productId);
     } catch (error) {
       console.error('Error removing item:', error);
     }
@@ -64,10 +42,6 @@ const Cart = () => {
 
     return { subtotal, shipping, tax, total };
   };
-
-  if (loading) {
-    return <div className="container" style={{ padding: '60px 20px', textAlign: 'center' }}>Loading...</div>;
-  }
 
   if (cart.length === 0) {
     return (
@@ -91,15 +65,15 @@ const Cart = () => {
     );
   }
 
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const itemText = totalItems === 1 ? 'item' : 'items';
+  const uniqueItemCount = cart.length; // Count unique items, not total quantity
+  const itemText = uniqueItemCount === 1 ? 'item' : 'items';
   const { subtotal, shipping, tax, total } = updateCartSummary(cart);
 
   return (
     <section className="cart-section">
       <div className="container">
         <h2 className="section-title" id="cart-title" style={{ textAlign: 'left' }}>
-          Shopping Cart ({totalItems} {itemText})
+          Shopping Cart ({uniqueItemCount} {itemText})
         </h2>
         <div className="cart-container">
           <div id="cart-container">

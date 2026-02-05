@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { productAPI } from '../utils/api';
-import { useCategories } from '../context/CategoryContext';
+import { Link, useNavigate } from 'react-router';
+import axios from 'axios';
+import { useAppContext } from '../context/AppContext';
 import ProductCard from '../components/ProductCard';
 import Button from '../components/Button';
-import { useCartCount } from '../hooks/useCartCount';
 
 const Home = () => {
   const navigate = useNavigate();
-  const { updateCartCount } = useCartCount();
-  const { categories } = useCategories();
+  const { categories } = useAppContext();
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [activeFilter, setActiveFilter] = useState('All');
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadData();
@@ -21,41 +16,17 @@ const Home = () => {
 
   const loadData = async () => {
     try {
-      const productsRes = await productAPI.getAll();
-      const allProducts = productsRes.data || [];
+      const response = await axios.get('http://localhost:3000/api/products');
+      const allProducts = response.data.data || [];
       setProducts(allProducts);
-      setFilteredProducts(allProducts.slice(0, 8));
     } catch (error) {
       console.error('Error loading data:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleCategoryClick = (categoryName) => {
     navigate(`/category?category=${encodeURIComponent(categoryName)}`);
   };
-
-  const handleFilterClick = (filter) => {
-    setActiveFilter(filter);
-    let filtered = products;
-
-    if (filter !== 'All') {
-      filtered = products.filter(p => 
-        p.category.toLowerCase() === filter.toLowerCase()
-      );
-    }
-
-    setFilteredProducts(filtered.slice(0, 8));
-  };
-
-  const handleCartUpdate = () => {
-    updateCartCount();
-  };
-
-  if (loading) {
-    return <div className="container" style={{ padding: '60px 20px', textAlign: 'center' }}>Loading...</div>;
-  }
 
   return (
     <>
@@ -136,40 +107,11 @@ const Home = () => {
       <section className="products-section">
         <div className="container">
           <h2 className="section-title">New Arrivals</h2>
-          <div className="filter-tabs-wrapper">
-            <div className="filter-tabs">
-              <button
-                className={`filter-tab ${activeFilter === 'All' ? 'active' : ''}`}
-                onClick={() => handleFilterClick('All')}
-              >
-                All
-              </button>
-              <button
-                className={`filter-tab ${activeFilter === 'Laptop' ? 'active' : ''}`}
-                onClick={() => handleFilterClick('Laptop')}
-              >
-                Laptop
-              </button>
-              <button
-                className={`filter-tab ${activeFilter === 'Mobile phone' ? 'active' : ''}`}
-                onClick={() => handleFilterClick('Mobile phone')}
-              >
-                Mobile phone
-              </button>
-              <button
-                className={`filter-tab ${activeFilter === 'Camera' ? 'active' : ''}`}
-                onClick={() => handleFilterClick('Camera')}
-              >
-                Camera
-              </button>
-            </div>
-          </div>
           <div className="products-grid">
-            {filteredProducts.map(product => (
+            {products.slice(0, 8).map(product => (
               <ProductCard
                 key={product._id || product.id}
                 product={product}
-                onCartUpdate={handleCartUpdate}
               />
             ))}
           </div>

@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { productAPI } from '../utils/api';
-import { addToCart, isInCart as checkIsInCart } from '../utils/cartUtils';
+import { useParams, useNavigate, Link } from 'react-router';
+import axios from 'axios';
+import { useAppContext } from '../context/AppContext';
 import { formatPrice } from '../utils/helpers';
 import Button from '../components/Button';
-import { useCartCount } from '../hooks/useCartCount';
 
 const Product = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { updateCartCount } = useCartCount();
+  const { addToCart, isInCart } = useAppContext();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const [isInCart, setIsInCart] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [notification, setNotification] = useState(null);
 
@@ -23,39 +20,20 @@ const Product = () => {
     }
   }, [id]);
 
-  useEffect(() => {
-    if (product) {
-      checkCartStatus();
-    }
-  }, [product]);
-
   const loadProduct = async () => {
     try {
-      const response = await productAPI.getById(id);
-      setProduct(response.data);
+      const response = await axios.get(`http://localhost:3000/api/products?id=${id}`);
+      setProduct(response.data.data);
     } catch (error) {
       console.error('Error loading product:', error);
       setError('Product not found');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const checkCartStatus = () => {
-    try {
-      const productId = product._id || product.id;
-      setIsInCart(checkIsInCart(productId));
-    } catch (error) {
-      console.error('Error checking cart:', error);
     }
   };
 
   const handleAddToCart = () => {
     try {
       addToCart(product, quantity);
-      setIsInCart(true);
       showNotification(`Added ${quantity} item(s) to cart!`);
-      updateCartCount();
     } catch (error) {
       console.error('Error adding to cart:', error);
       showNotification('Error adding to cart');
@@ -88,10 +66,6 @@ const Product = () => {
     return stars;
   };
 
-  if (loading) {
-    return <div className="container" style={{ padding: '60px 20px', textAlign: 'center' }}>Loading...</div>;
-  }
-
   if (error || !product) {
     return (
       <div className="container" style={{ padding: '60px 20px' }}>
@@ -106,10 +80,6 @@ const Product = () => {
       </div>
     );
   }
-
-  const discount = product.originalPrice 
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-    : 0;
 
   return (
     <>
@@ -128,12 +98,6 @@ const Product = () => {
               </div>
               <div className="product-price-large">
                 <span className="current-price-large">{formatPrice(product.price)}</span>
-                {product.originalPrice && product.originalPrice > product.price && (
-                  <>
-                    <span className="original-price-large">{formatPrice(product.originalPrice)}</span>
-                    <span className="discount-badge">{discount}% OFF</span>
-                  </>
-                )}
               </div>
               <div className="product-info-section">
                 <h3>Description</h3>
@@ -170,7 +134,7 @@ const Product = () => {
                 </button>
               </div>
               <div id="add-to-cart-container">
-                {isInCart ? (
+                {isInCart(product._id || product.id) ? (
                   <Button
                     text="Go to Cart"
                     className="btn-orange btn-large btn-block"

@@ -1,0 +1,116 @@
+pageSize design 1
+pagesize: {
+    enabled: true,
+    el: document.getElementById("pagesize-container"),
+    pageSize: 12,
+    options: [12, 16, 24, 32],
+    pageSizeClass: "pagesize-btn",
+    selectedPageSizeClass: "pagesize-btn-active",
+    action: "click",
+    
+    template: function(selected, pagesize) {
+      const { pageSizeClass, selectedPageSizeClass, options } = pagesize;
+      
+      let buttons = '';
+      options.forEach((opt) => {
+        const isActive = selected == opt ? selectedPageSizeClass : '';
+        buttons += `<button id="${opt}" data-id="${opt}" data-action="changePageSize" class="${pageSizeClass} ${isActive}">${opt}</button>`;
+      });
+      
+      return `
+        <div class="pagesize-wrapper">
+          <span class="pagesize-label">Show:</span>
+          ${buttons}
+        </div>
+      `;
+    }
+  },
+
+  pagesize design -2
+  pagesize: {
+  enabled: true,
+  el: document.getElementById("pagesize-container"),
+  pageSize: 12,
+  options: [12, 16, 24, 32],
+  pageSizeClass: "pill-btn",
+  selectedPageSizeClass: "pill-btn-active",
+  action: "click",
+  
+  template: function(selected, pagesize) {
+    const { pageSizeClass, selectedPageSizeClass, options } = pagesize;
+    
+    let buttons = '';
+    options.forEach((opt) => {
+      const isActive = selected == opt ? selectedPageSizeClass : '';
+      buttons += `<button id="${opt}" class="${pageSizeClass} ${isActive}">${opt}</button>`;
+    });
+    
+    return `
+      <div class="pagesize-pills">
+        <span class="pills-label">Show:</span>
+        <div class="pills-group">${buttons}</div>
+      </div>
+    `;
+  }
+}
+
+styl 3
+pagesize: {
+          enabled: true,
+          el: document.getElementById("pagesize-container"),
+          pageSize: 12,
+          options: [12, 16, 24, 32],
+          pageSizeClass: "segment-btn",
+          selectedPageSizeClass: "segment-btn-active",
+          action: "click",
+        
+          template: function (selected, pagesize) {
+            const { pageSizeClass, selectedPageSizeClass, options } = pagesize;
+        
+            let buttons = '';
+            options.forEach((opt) => {
+              const isActive = selected == opt ? selectedPageSizeClass : '';
+              buttons += `<button id="${opt}" class="${pageSizeClass} ${isActive}">${opt}</button>`;
+            });
+        
+            return `
+              <div class="pagesize-segmented style-2">
+                <span class="segment-label">Show:</span>
+                <div class="segment-group">${buttons}</div>
+              </div>
+            `;
+          }
+        },
+
+        style 4
+pagesize: {
+          enabled: true,
+          el: document.getElementById("pagesize-container"),
+          pageSize: 12,
+          options: [12, 16, 24, 32],
+          pageSizeClass: "pagesize-select",
+          selectedPageSizeClass: "pagesize-selected",
+          action: "change",
+        
+          template: function (selected, pagesize) {
+            const { pageSizeClass, selectedPageSizeClass, options } = pagesize;
+        
+            let optionsHTML = '';
+            options.forEach((opt) => {
+              if (selected == opt) {
+                optionsHTML += `<option selected class="${selectedPageSizeClass}" id="${opt}">${opt} per page</option>`;
+              } else {
+                optionsHTML += `<option id="${opt}">${opt} per page</option>`;
+              }
+            });
+        
+            return `
+              <div class="pagesize-dropdown style-3">
+                <span class="dropdown-label">Show:</span>
+                <select class="${pageSizeClass}">
+                  ${optionsHTML}
+                </select>
+              </div>
+            `;
+          }
+        },

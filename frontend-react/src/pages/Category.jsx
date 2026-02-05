@@ -1,43 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
-import { productAPI } from '../utils/api';
+import { useSearchParams, Link } from 'react-router';
+import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import Button from '../components/Button';
-import { useCartCount } from '../hooks/useCartCount';
 
 const Category = () => {
   const [searchParams] = useSearchParams();
   const category = searchParams.get('category') || '';
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const { updateCartCount } = useCartCount();
 
   useEffect(() => {
     if (category) {
       loadCategoryProducts(category);
-    } else {
-      setLoading(false);
     }
   }, [category]);
 
   const loadCategoryProducts = async (categoryName) => {
     try {
-      const response = await productAPI.getByCategory(categoryName);
-      setProducts(response.data || []);
+      const response = await axios.get(`http://localhost:3000/api/products?category=${encodeURIComponent(categoryName)}`);
+      setProducts(response.data.data || []);
     } catch (error) {
       console.error('Error loading category products:', error);
-    } finally {
-      setLoading(false);
     }
   };
-
-  const handleCartUpdate = () => {
-    updateCartCount();
-  };
-
-  if (loading) {
-    return <div className="container" style={{ padding: '60px 20px', textAlign: 'center' }}>Loading...</div>;
-  }
 
   if (!category) {
     return (
@@ -89,7 +74,6 @@ const Category = () => {
             <ProductCard
               key={product._id || product.id}
               product={product}
-              onCartUpdate={handleCartUpdate}
             />
           ))}
         </div>

@@ -70,7 +70,41 @@ frontend-react/
 
 ## Backend Integration
 
-Make sure your backend is running on `http://localhost:3000`. The frontend will automatically connect to the backend APIs.
+### Default Configuration
+
+By default, the frontend connects to `http://localhost:3000/api`. Make sure your backend is running on this URL.
+
+### Environment Variables
+
+You can configure the API URL using environment variables:
+
+1. **Create a `.env` file** in the `frontend-react` directory:
+   ```bash
+   VITE_API_URL=http://localhost:3000/api
+   ```
+
+2. **For production**, set your production API URL:
+   ```bash
+   VITE_API_URL=https://api.yourdomain.com/api
+   ```
+
+3. **Restart the development server** after creating/modifying `.env`:
+   ```bash
+   npm run dev
+   ```
+
+**Note:** In Vite, environment variables must be prefixed with `VITE_` to be exposed to the client-side code.
+
+**Example `.env` file:**
+```
+# Development
+VITE_API_URL=http://localhost:3000/api
+
+# Production (uncomment and set your production URL)
+# VITE_API_URL=https://api.yourdomain.com/api
+```
+
+**Important:** Make sure to add `.env` to your `.gitignore` file to prevent committing sensitive configuration. The `.env` file should never be committed to version control.
 
 ## Available Scripts
 

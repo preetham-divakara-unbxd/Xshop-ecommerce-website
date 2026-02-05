@@ -1,11 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { useOrders } from '../context/OrderContext';
+import { Link } from 'react-router';
+import { useAppContext } from '../context/AppContext';
 import { formatPrice } from '../utils/helpers';
 import Button from '../components/Button';
 
 const Orders = () => {
-  const { orders } = useOrders();
+  const { orders } = useAppContext();
 
   if (orders.length === 0) {
     return (

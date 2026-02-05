@@ -1,5 +1,8 @@
 /* Page-specific styles */
 
+html {
+  scroll-behavior: smooth;
+}
 /* Product Detail Page */
 .product-detail-section {
   margin: 40px 0;
@@ -648,6 +651,20 @@
   color: var(--text-light);
 }
 
+/* Form Grid Layouts */
+.form-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.form-grid-2 {
+  grid-template-columns: 2fr 1fr;
+}
+
+.form-grid-3 {
+  grid-template-columns: 2fr 1fr 1fr;
+}
+
 /* Responsive */
 @media (max-width: 968px) {
   .cart-container,
@@ -697,7 +714,155 @@
   .current-price-large {
     font-size: 28px;
   }
+
+  /* Form grids responsive */
+  .form-grid-2,
+  .form-grid-3 {
+    grid-template-columns: 1fr;
+  }
 }
+
+/* Search Page Layout with Filters */
+.search-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 32px;
+  margin-top: 24px;
+}
+
+.search-filters {
+  position: sticky;
+  top: 100px;
+  height: fit-content;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+
+.filter-container {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.filter-container h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--text-dark);
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+#sdk-filters-root {
+  width: 100%;
+  min-height: 400px;
+}
+
+.search-results {
+  width: 100%;
+}
+
+/* pages.css - Add after line 762 (.search-results section) */
+
+/* Unbxd Product Cards - Using YOUR class (productItemClass) */
+.unbxd-product-item {
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px;
+  
+  /* transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column; */
+}
+
+.unbxd-product-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+  border-color: var(--primary-color);
+}
+
+.unbxd-product-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+/* Unbxd Search Results Container */
+#unbxd-search-results {
+  width: 100%;
+ 
+
+}
+
+.search-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+#no-results-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+ /* Hide toolbar when no-results has content */
+.search-results:has(#no-results-container:not(:empty)) .search-toolbar {
+  display: none;
+}
+/* Hide SDK pre-loader */
+.UNX-pre-loader {
+  display: none !important;
+}
+
+/* Product Card */
+.product-images { width: 100%; aspect-ratio: 1; overflow: hidden; border-radius: 8px; margin-bottom: 12px; }
+.img-wrap { width: 100%; height: 100%; }
+.img-wrap.hidden { display: none; }
+.img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+.product-info { padding: 0 4px 12px; }
+.brand { font-size: 12px; color: #666; margin-bottom: 4px; }
+.title { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+.price { font-size: 16px; font-weight: 600; color: var(--primary-color); margin-bottom: 10px; }
+
+/* Swatches */
+.swatches { display: flex; gap: 6px; margin-bottom: 12px; }
+.swatch { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; padding: 0; }
+.swatch:hover { border-color: #666; }
+.swatch.active { border-color: var(--primary-color); box-shadow: 0 0 0 2px var(--primary-color); }
+
+/* List view */
+.list-card { display: flex; flex-direction: row; align-items: center; gap: 20px; }
+.list-card .product-images { width: 200px; height: 200px; flex-shrink: 0; aspect-ratio: auto; }
+.list-card .product-info { flex: 1; }
+
+@media (max-width: 968px) {
+  .search-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .search-filters {
+    position: static;
+    max-height: none;
+  }
+
+  .filter-container {
+    margin-bottom: 24px;
+  }
+}
+
 
 @media (max-width: 768px) {
   .about-content {
@@ -727,6 +892,37 @@
     width: 100%;
     justify-content: center;
   }
+
+  /* Form improvements for tablet/mobile */
+  .checkout-form {
+    padding: 20px;
+  }
+
+  .form-section-title {
+    font-size: 18px;
+  }
+
+  .form-input {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 14px 16px; /* Larger touch target */
+  }
+
+  .form-textarea {
+    min-height: 100px;
+  }
+
+  .order-summary {
+    margin-top: 24px;
+  }
+
+  .order-item {
+    flex-wrap: wrap;
+  }
+
+  .order-item-image {
+    width: 60px;
+    height: 60px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -734,4 +930,663 @@
     width: 100%;
     height: 150px;
   }
+
+  /* Mobile form improvements */
+  .checkout-form {
+    padding: 16px;
+  }
+
+  .form-section {
+    margin-bottom: 24px;
+  }
+
+  .form-section-title {
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-label {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  .form-input {
+    padding: 12px 14px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .payment-option {
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  .order-item {
+    padding: 12px 0;
+  }
+
+  .order-item-image {
+    width: 50px;
+    height: 50px;
+  }
+
+  .order-item-name {
+    font-size: 13px;
+  }
+
+  .order-item-price {
+    font-size: 14px;
+  }
+
+  .summary-row {
+    font-size: 14px;
+  }
+
+  .summary-row.total {
+    font-size: 20px;
+  }
 }
+/* ===== Custom Pagination Styles 1===== */
+.custom-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 6px 12px;
+  margin: 10px auto 0 auto; 
+}
+
+.page-numbers {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.page-btn {
+  padding: 10px 16px;
+  border: 1px solid #e0e0e0;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.2s ease;
+}
+
+.page-btn:hover:not(:disabled) {
+ 
+  /* remove comment whhen using style-1  */
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.15);
+  background: #f5f5f5;
+}
+
+.page-btn-active {
+  border: 2px solid #333;
+  font-weight: 600;
+  pointer-events: none; 
+  
+}
+
+.page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.page-ellipsis {
+  padding: 10px 8px;
+  color: #666;
+}
+/* ===== Pagination Style 2 ===== */
+.custom-pagination.style-2 {
+  background: white;
+  border-radius: 50px;
+  padding: 6px 12px;
+  gap: 2px;
+  width: fit-content;
+  margin: 15px auto 0 auto; 
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.style-2 .page-btn {
+  background: transparent;
+  border: none;
+  color: #5c5c8a;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  min-width: auto;
+}
+
+.style-2 .nav-btn {
+  color: #5858e0;
+  font-weight: 600;
+}
+
+.style-2 .page-btn-active {
+  background: #5858e0;
+  color: white;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+
+.style-2 .page-btn:disabled {
+  opacity: 0.4;
+}
+
+.style-2 .page-numbers {
+  gap: 2px;
+}
+
+/* ===== PageSize Buttons 1===== */
+.pagesize-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagesize-label {
+  font-size: 13px;
+  color: #666;
+}
+
+.pagesize-btn {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #333;
+}
+
+.pagesize-btn-active {
+  background: #5858e0;
+  color: white;
+  border-color: #5858e0;
+}
+
+/* ===== PageSize Pills 2===== */
+.pagesize-pills {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pills-label {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+}
+
+.pills-group {
+  display: flex;
+  gap: 4px;
+}
+
+.pill-btn {
+  padding: 6px 14px;
+  border: none;
+  background: #e8e8f0;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #5c5c8a;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.pill-btn-active {
+  background: #5858e0;
+  color: white;
+}/* ================================================
+   PAGINATION STYLE 3 - NO BACKGROUND, FULL WIDTH
+   ================================================ */
+
+/* Style 3 - Main Container */
+.custom-pagination.style-3 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 6px 12px;
+  margin: 10px auto 0 auto; 
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+/* Style 3 - Center Section */
+.custom-pagination.style-3 .pagination-center {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Style 3 - Page Numbers Container */
+.custom-pagination.style-3 .page-numbers {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Style 3 - All Buttons Base */
+.custom-pagination.style-3 .page-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid #d9d9d9;
+  border-radius: 50%;
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Style 3 - Button Hover */
+.custom-pagination.style-3 .page-btn:hover:not(:disabled) {
+  border-color: #667eea;
+  color: #667eea;
+}
+
+/* Style 3 - Active Page */
+.custom-pagination.style-3 .page-btn-active {
+  background: #667eea;
+  border-color: #667eea;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Style 3 - Nav Buttons (Previous/Next) */
+.custom-pagination.style-3 .nav-btn {
+  min-width: auto;
+  padding: 10px 20px;
+  border-radius: 25px;
+  background: #667eea;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Style 3 - Nav Button Hover */
+.custom-pagination.style-3 .nav-btn:hover:not(:disabled) {
+  background: #5a67d8;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* Style 3 - Disabled Buttons */
+.custom-pagination.style-3 .page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #f5f5f5;
+}
+
+/* Style 3 - Page Info Text */
+.custom-pagination.style-3 .page-info {
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0 ;
+  border-left: none;
+  white-space: nowrap;
+}
+
+/* ================================================
+   PAGINATION STYLE 4 - Circle Design
+   Layout: (‹) 1 2 (3) 4 ... 14 (›)
+   ================================================ */
+
+   .custom-pagination.style-4 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 6px 12px;
+    margin: 10px auto 0 auto; 
+  }
+  
+  /* Nav Buttons (Prev/Next) - Large Circle */
+  .custom-pagination.style-4 .nav-btn {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #d9d9d9;
+    border-radius: 50%;
+    background: #fff;
+    color: #4169e1;
+    font-size: 24px;
+    font-weight: 400;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .custom-pagination.style-4 .nav-btn:disabled {
+    color: #ccc;
+    border-color: #e5e5e5;
+    cursor: not-allowed;
+  }
+  
+  /* Page Numbers Container */
+  .custom-pagination.style-4 .page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  /* Page Number Buttons - No border by default */
+  .custom-pagination.style-4 .page-btn {
+    width: 44px;
+    height: 44px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    background: transparent;
+    color: #666;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Active Page - Blue Circle Border */
+  .custom-pagination.style-4 .page-btn-active {
+    border: 2px solid #4169e1;
+    color: #4169e1;
+    font-weight: 600;
+  }
+  
+  /* Remove nav-btn overrides for page numbers */
+  .custom-pagination.style-4 .page-btn.nav-btn {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #d9d9d9;
+    color: #4169e1;
+    font-size: 24px;
+  }
+  
+  .custom-pagination.style-4 .page-btn.nav-btn:disabled {
+    color: #ccc;
+    border-color: #e5e5e5;
+  }
+  
+  /* Ellipsis */
+  .custom-pagination.style-4 .page-ellipsis {
+    color: #999;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    padding: 0 4px;
+  }
+  /* Nav button hover - black border */
+.custom-pagination.style-4 .nav-btn:hover:not(:disabled),
+.custom-pagination.style-4 .page-btn.nav-btn:hover:not(:disabled) {
+  border-color: #333;
+
+}
+
+/* Page button hover - light gray circle */
+.custom-pagination.style-4 .page-btn:hover:not(.page-btn-active):not(.nav-btn) {
+  background: #f0f0f0;
+}
+
+/* ================================================
+   PAGESIZE STYLE 3 - Segmented Control (iOS)
+   ================================================ */
+   .pagesize-segmented.style-2 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .pagesize-segmented.style-2 .segment-label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+  }
+  
+  .pagesize-segmented.style-2 .segment-group {
+    display: flex;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .pagesize-segmented.style-2 .segment-btn {
+    padding: 8px 18px;
+    border: none;
+    background: #fff;
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-right: 1px solid #d9d9d9;
+  }
+  
+  .pagesize-segmented.style-2 .segment-btn:last-child {
+    border-right: none;
+  }
+  
+  .pagesize-segmented.style-2 .segment-btn-active {
+    background: #4169e1;
+    color: #fff;
+  }
+  
+  .pagesize-segmented.style-2 .segment-btn:hover:not(.segment-btn-active) {
+    background: #f5f5f5;
+  }
+
+  /* ================================================
+   PAGESIZE STYLE 4 - Dropdown
+   ================================================ */
+.pagesize-dropdown.style-3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pagesize-dropdown.style-3 .dropdown-label {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.pagesize-dropdown.style-3 .pagesize-select {
+  padding: 8px 32px 8px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%23666' d='M5 7L0 2h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.pagesize-dropdown.style-3 .pagesize-select:hover {
+  border-color: #4169e1;
+}
+
+.pagesize-dropdown.style-3 .pagesize-select:focus {
+  outline: none;
+  border-color: #4169e1;
+}
+
+/* ================================================
+   PAGESIZE STYLE 5 - Radio Buttons
+   ================================================ */
+   .pagesize-radios {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .pagesize-radios .radios-label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+  }
+  
+  .pagesize-radios .radios-group {
+    display: flex;
+    gap: 16px;
+  }
+  
+  .pagesize-radios .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .pagesize-radios .radio-label:hover {
+    color: #333;
+  }
+  
+  .pagesize-radios .radio-active {
+    color: #4169e1;
+    font-weight: 600;
+  }
+  
+  .pagesize-radios .radio-option {
+    width: 16px;
+    height: 16px;
+    accent-color: #4169e1;
+    cursor: pointer;
+  }
+  
+  .pagesize-radios .radio-text {
+    user-select: none;
+  }
+
+  /* ================================================
+   PAGINATION STYLE 5 - Page Numbers Only
+   ================================================ */
+.custom-pagination.style-5 {
+  display: flex;
+  justify-content: center;
+  padding: 6px 12px;
+  margin: 10px auto 0 auto; 
+}
+
+.custom-pagination.style-5 .page-numbers {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.custom-pagination.style-5 .page-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #666;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-pagination.style-5 .page-btn:hover:not(.page-btn-active) {
+  background: #f0f0f0;
+}
+
+.custom-pagination.style-5 .page-btn-active {
+  border: 2px solid #4169e1;
+  color: #4169e1;
+  font-weight: 600;
+}
+
+.custom-pagination.style-5 .page-ellipsis {
+  color: #999;
+  font-size: 15px;
+  letter-spacing: 2px;
+}
+
+
+/* ================================================
+   PAGINATION STYLE 6 - Product Count + Page Numbers
+   Layout:  Showing 25 to 48 of 302 products
+            1  2  (3)  4  5  ...  12
+   ================================================ */
+
+   .custom-pagination.style-6 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    margin: 5px auto 0 auto; 
+  }
+  
+  /* Product Info Text */
+  .custom-pagination.style-6 .product-info {
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  /* Page Numbers Container */
+  .custom-pagination.style-6 .page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  /* Page Number Buttons */
+  .custom-pagination.style-6 .page-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #666;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .custom-pagination.style-6 .page-btn:hover:not(.page-btn-active) {
+    background: #f0f0f0;
+  }
+  
+  /* Active Page - Blue Circle Border */
+  .custom-pagination.style-6 .page-btn-active {
+    border: 2px solid #4169e1;
+    color: #4169e1;
+    font-weight: 600;
+  }
+  
+  /* Ellipsis */
+  .custom-pagination.style-6 .page-ellipsis {
+    color: #999;
+    font-size: 15px;
+    letter-spacing: 2px;
+  }
+
+  .custom-pagination.style-6 * {
+    margin: 0;
+    padding: 0;
+  }

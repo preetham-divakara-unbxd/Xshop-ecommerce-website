@@ -1,24 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { getCart, clearCart } from '../utils/cartUtils';
+import { useNavigate, Link } from 'react-router';
+import { useAppContext } from '../context/AppContext';
 import { formatPrice } from '../utils/helpers';
 import Button from '../components/Button';
-import { useCartCount } from '../hooks/useCartCount';
-import { useOrders } from '../context/OrderContext';
 
 const Order = () => {
   const navigate = useNavigate();
-  const { updateCartCount } = useCartCount();
-  const { addOrder } = useOrders();
-  const [cart, setCart] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [orderPlaced, setOrderPlaced] = useState(false);
-  const [orderId, setOrderId] = useState(null);
+  const { cart, clearCart, addOrder } = useAppContext();
   const [paymentMethod, setPaymentMethod] = useState('card');
+  const [validationError, setValidationError] = useState(null);
 
-  useEffect(() => {
-    loadCart();
-  }, []);
+  // Validation functions
+  const validateEmail = (email) => {
+    if (!email || !email.trim()) {
+      return 'Email is required';
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      return 'Please enter a valid email address';
+    }
+    return null;
+  };
+
+  const validatePhone = (phone) => {
+    if (!phone || !phone.trim()) {
+      return 'Phone number is required';
+    }
+    // Remove all non-digit characters
+    const cleanedPhone = phone.replace(/\D/g, '');
+    // Check if it's exactly 10 digits (Indian phone number format)
+    if (cleanedPhone.length !== 10) {
+      return 'Please enter a valid 10-digit phone number';
+    }
+    return null;
+  };
+
+  const validatePincode = (pincode) => {
+    if (!pincode || !pincode.trim()) {
+      return 'Pincode is required';
+    }
+    // Remove all non-digit characters
+    const cleanedPincode = pincode.replace(/\D/g, '');
+    // Check if it's exactly 6 digits (Indian pincode format)
+    if (cleanedPincode.length !== 6) {
+      return 'Please enter a valid 6-digit pincode';
+    }
+    return null;
+  };
 
   useEffect(() => {
     // Initialize card details display when component mounts or payment method changes
@@ -34,23 +62,40 @@ const Order = () => {
     }
   }, [paymentMethod]);
 
-  const loadCart = () => {
-    try {
-      const cartData = getCart();
-      setCart(cartData);
-      if (cartData.length === 0) {
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error('Error loading cart:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
+    setValidationError(null);
+    
     const formData = new FormData(e.target);
+
+    // Get form values
+    const email = formData.get('email');
+    const phone = formData.get('phone');
+    const pincode = formData.get('pincode');
+
+    // Validate email
+    const emailError = validateEmail(email);
+    if (emailError) {
+      setValidationError(emailError);
+      document.getElementById('email')?.focus();
+      return;
+    }
+
+    // Validate phone
+    const phoneError = validatePhone(phone);
+    if (phoneError) {
+      setValidationError(phoneError);
+      document.getElementById('phone')?.focus();
+      return;
+    }
+
+    // Validate pincode
+    const pincodeError = validatePincode(pincode);
+    if (pincodeError) {
+      setValidationError(pincodeError);
+      document.getElementById('pincode')?.focus();
+      return;
+    }
 
     // Calculate totals
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -70,12 +115,12 @@ const Order = () => {
     const orderData = {
       customer: {
         name: formData.get('name'),
-        email: formData.get('email'),
-        phone: formData.get('phone'),
+        email: email.trim(),
+        phone: phone.replace(/\D/g, ''), // Store only digits
         address: formData.get('address'),
         city: formData.get('city'),
         state: formData.get('state'),
-        pincode: formData.get('pincode')
+        pincode: pincode.replace(/\D/g, '') // Store only digits
       },
       payment: {
         method: formData.get('payment-method'),
@@ -90,23 +135,18 @@ const Order = () => {
       total
     };
 
-    // Add order to React context (state only, no API call)
+    // Add order
     const newOrder = addOrder(orderData);
 
     // Clear cart
     clearCart();
-    updateCartCount();
 
-    // Show success
-    setOrderId(newOrder.orderId);
-    setOrderPlaced(true);
+    // Navigate directly to orders page
+    navigate('/orders');
   };
 
-  if (loading) {
-    return <div className="container" style={{ padding: '60px 20px', textAlign: 'center' }}>Loading...</div>;
-  }
 
-  if (cart.length === 0 && !orderPlaced) {
+  if (cart.length === 0) {
     return (
       <section className="checkout-section">
         <div className="container">
@@ -123,35 +163,6 @@ const Order = () => {
     );
   }
 
-  if (orderPlaced) {
-    return (
-      <section className="checkout-section">
-        <div className="container">
-          <div className="card" style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
-            <div className="card-body">
-              <div style={{ fontSize: '64px', marginBottom: '20px' }}>✅</div>
-              <h2 style={{ marginBottom: '16px', color: 'var(--success-color)' }}>Order Placed Successfully!</h2>
-              <p style={{ marginBottom: '8px', color: 'var(--text-light)' }}>Your order ID is:</p>
-              <p style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '24px', color: 'var(--primary-color)' }}>
-                {orderId}
-              </p>
-              <p style={{ marginBottom: '24px', color: 'var(--text-light)' }}>
-                We've sent a confirmation email with order details. You will receive your order within 3-5 business days.
-              </p>
-              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-                <Link to="/orders">
-                  <Button text="View My Orders" className="btn-primary" />
-                </Link>
-                <Link to="/">
-                  <Button text="Continue Shopping" className="btn-secondary" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const shipping = subtotal > 5000 ? 0 : 200;
@@ -164,6 +175,24 @@ const Order = () => {
         <h2 className="section-title" style={{ textAlign: 'left' }}>Checkout</h2>
         <div className="checkout-container">
           <form id="order-form" className="checkout-form" onSubmit={handleSubmit}>
+            {validationError && (
+              <div style={{
+                backgroundColor: '#fee2e2',
+                color: '#dc2626',
+                padding: '10px 14px',
+                borderRadius: '6px',
+                marginBottom: '20px',
+                border: '1px solid #fca5a5',
+                fontSize: '14px',
+                fontWeight: '500',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <span>⚠️</span>
+                <span>{validationError}</span>
+              </div>
+            )}
             {/* Shipping Information */}
             <div className="form-section">
               <h3 className="form-section-title">Shipping Information</h3>
@@ -183,7 +212,7 @@ const Order = () => {
                 <label className="form-label" htmlFor="address">Address *</label>
                 <textarea id="address" name="address" className="form-input form-textarea" required></textarea>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '16px' }}>
+              <div className="form-grid form-grid-3">
                 <div className="form-group">
                   <label className="form-label" htmlFor="city">City *</label>
                   <input type="text" id="city" name="city" className="form-input" required />
@@ -248,7 +277,7 @@ const Order = () => {
                     placeholder="1234 5678 9012 3456"
                   />
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '16px' }}>
+                <div className="form-grid form-grid-2">
                   <div className="form-group">
                     <label className="form-label" htmlFor="expiry-date">Expiry Date *</label>
                     <input
